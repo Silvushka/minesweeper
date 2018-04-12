@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter;
 
 import minesweeper.UserInterface;
 import minesweeper.core.Clue;
@@ -104,28 +103,42 @@ public class ConsoleUI implements UserInterface {
 	 * playing field according to input string.
 	 */
 	private void processInput() {
-		Pattern pattern = Pattern.compile("O([A-I])([0-8])");
 		System.out.println(
 				"ZADAJ: [Pre ukoncenie hry: X] [Pre oznacenie dlazdice A1: MA1] [Pre otvorenie dlazdice B4: OB4]");
-		String vstup = readLine();
-		if (vstup.equals("X")) {
-			System.out.println("Koniec hry!");
-			return;
-		}
-		if (pattern.matches("O([A-I])([0-8])", vstup)) {
-//			Matcher matcher = pattern.matcher(vstup);
-			int row = vstup.charAt(1);
-			int column = Character.getNumericValue(vstup.charAt(2));
-			row -= 65;
-			field.openTile(row, column);
-		}
-		if (pattern.matches("M([A-I])([0-8])", vstup)) {
-//			Matcher matcher = pattern.matcher(vstup);
-			int row = vstup.charAt(1);
-			int column = Character.getNumericValue(vstup.charAt(2));
-			row -= 65;
-			field.markTile(row, column);
+		System.out.println("ZOSTAVA OZNACIT MIN: " + field.getRemainingMineCount());
+		try {
+			handleInput(readLine());
+		} catch (WrongFormatException e) {
+			System.out.println(e.getMessage());
 		}
 
+	}
+
+	private void handleInput(String input) throws WrongFormatException {
+		Pattern pattern = Pattern.compile("(O|M)([A-I])([0-8])");
+		Matcher matcher = pattern.matcher(input);
+
+		if (matcher.matches()) {
+			if (input.equals("X")) {
+				System.out.println("Koniec hry!");
+				System.exit(0);
+				return;
+			}
+			if (Pattern.matches("O([A-I])([0-8])", input)) {
+				int row = input.charAt(1);
+				int column = Character.getNumericValue(input.charAt(2));
+				row -= 65;
+				field.openTile(row, column);
+			}
+			if (Pattern.matches("M([A-I])([0-8])", input)) {
+				int row = input.charAt(1);
+				int column = Character.getNumericValue(input.charAt(2));
+				row -= 65;
+				field.markTile(row, column);
+			}
+
+		} else {
+			throw new WrongFormatException("Zle zadany vstup!");
+		}
 	}
 }

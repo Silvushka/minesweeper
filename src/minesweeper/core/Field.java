@@ -2,6 +2,8 @@ package minesweeper.core;
 
 import java.util.Random;
 
+import minesweeper.core.Tile.State;
+
 /**
  * Field represents playing field and game logic.
  */
@@ -140,14 +142,18 @@ public class Field {
 	 */
 	private int getNumberOf(Tile.State tile) {
 		int numberOf = 0;
-		for (int row = 0; row < tiles.length; row++) {
-			for (int column = 0; column < tiles[0].length; column++) {
+		for (int row = 0; row < getRowCount(); row++) {
+			for (int column = 0; column < getColumnCount(); column++) {
 				if (tile == tiles[row][column].getState()) {
 					numberOf++;
 				}
 			}
 		}
 		return numberOf;
+	}
+
+	public int getRemainingMineCount() {
+		return getMineCount()-getNumberOf(State.MARKED);
 	}
 
 	private void openAdjacentTiles(int row, int column) {

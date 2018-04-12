@@ -18,8 +18,6 @@ public class Minesweeper {
 		userInterface = new ConsoleUI();
 		Field field = new Field(9, 9, 10);
 		userInterface.newGameStarted(field);
-		System.out.println("Hra skoncila");
-		System.out.println("Hra zacala");
 	}
 
 	/**
