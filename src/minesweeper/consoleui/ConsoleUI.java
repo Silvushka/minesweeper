@@ -115,22 +115,23 @@ public class ConsoleUI implements UserInterface {
 	}
 
 	private void handleInput(String input) throws WrongFormatException {
+		String toUppperCase = input.toUpperCase();
+		
 		Pattern pattern = Pattern.compile("(O|M)([A-I])([0-8])");
-		Matcher matcher = pattern.matcher(input);
+		Matcher matcher = pattern.matcher(toUppperCase);
 
 		if (matcher.matches()) {
-			if (input.equals("X")) {
+			if (toUppperCase.equals("X")) {
 				System.out.println("Koniec hry!");
 				System.exit(0);
-				return;
 			}
-			if (Pattern.matches("O([A-I])([0-8])", input)) {
+			if (Pattern.matches("O([A-I])([0-8])", toUppperCase)) {
 				int row = input.charAt(1);
 				int column = Character.getNumericValue(input.charAt(2));
 				row -= 65;
 				field.openTile(row, column);
 			}
-			if (Pattern.matches("M([A-I])([0-8])", input)) {
+			if (Pattern.matches("M([A-I])([0-8])", toUppperCase)) {
 				int row = input.charAt(1);
 				int column = Character.getNumericValue(input.charAt(2));
 				row -= 65;

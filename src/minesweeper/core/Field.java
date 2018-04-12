@@ -63,11 +63,12 @@ public class Field {
 	 */
 	public void openTile(int row, int column) {
 		Tile tile = tiles[row][column];
-		if (tile.getState() == Tile.State.CLOSED) {
+		if (tile.getState() == Tile.State.CLOSED || tile.getState() == Tile.State.MARKED) {
 			tile.setState(Tile.State.OPEN);
+			if(tile instanceof Clue) {
 			if (((Clue) tile).getValue() == 0) {
 				openAdjacentTiles(row, column);
-			}
+			}}
 			if (tile instanceof Mine) {
 				state = GameState.FAILED;
 				return;
@@ -75,7 +76,6 @@ public class Field {
 
 			if (isSolved()) {
 				state = GameState.SOLVED;
-				return;
 			}
 		}
 	}

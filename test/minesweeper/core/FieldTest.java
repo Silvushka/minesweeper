@@ -6,6 +6,8 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import minesweeper.core.Tile.State;
+
 public class FieldTest {
 
 	static final int ROWS = 9;
@@ -39,10 +41,10 @@ public class FieldTest {
 	@Test
 	public void generate() {
 		Field field = new Field(ROWS, COLUMNS, MINES);
-		
+
 		int mineCount = 0;
 		int clueCount = 0;
-		
+
 		assertEquals(ROWS, field.getRowCount());
 		assertEquals(COLUMNS, field.getColumnCount());
 		assertEquals(MINES, field.getMineCount());
@@ -62,7 +64,7 @@ public class FieldTest {
 		}
 
 		assertEquals(MINES, mineCount);
-		
+
 		for (int row = 0; row < field.getRowCount(); row++) {
 			for (int column = 0; column < field.getColumnCount(); column++) {
 				if (field.getTile(row, column) instanceof Clue) {
@@ -74,5 +76,71 @@ public class FieldTest {
 		assertEquals(ROWS * COLUMNS - MINES, clueCount);
 
 	}
+
+	@Test
+	public void markTile() {
+		Field field = new Field(ROWS, COLUMNS, MINES);
+
+		for (int row = 0; row < field.getRowCount(); row++) {
+			for (int column = 0; column < field.getColumnCount(); column++) {
+				if ((field.getTile(row, column)).getState() == State.MARKED) {
+					field.markTile(row, column);
+					assertEquals(State.CLOSED, (field.getTile(row, column)).getState());
+				}
+				
+				if ((field.getTile(row, column)).getState() == State.CLOSED) {
+					field.markTile(row, column);
+					assertEquals(State.MARKED, (field.getTile(row, column)).getState());
+				}
+				if ((field.getTile(row, column)).getState() == State.OPEN) {
+					field.markTile(row, column);
+					assertEquals(State.OPEN, (field.getTile(row, column)).getState());
+				}
+				
+				
+			}
+		}
+
+	}
+	
+	@Test
+	public void openTile() {
+		Field field = new Field(ROWS, COLUMNS, MINES);
+
+		for (int row = 0; row < field.getRowCount(); row++) {
+			for (int column = 0; column < field.getColumnCount(); column++) {
+				if ((field.getTile(row, column)).getState() == State.MARKED) {
+					field.openTile(row, column);
+					assertEquals(State.OPEN, (field.getTile(row, column)).getState());
+				}
+				
+				if ((field.getTile(row, column)).getState() == State.CLOSED) {
+					field.openTile(row, column);
+					assertEquals(State.OPEN, (field.getTile(row, column)).getState());
+				}
+				if ((field.getTile(row, column)).getState() == State.OPEN) {
+					field.openTile(row, column);
+					assertEquals(State.OPEN, (field.getTile(row, column)).getState());
+				}
+				
+				
+			}
+		}
+
+	}
+	
+	@Test
+	public void isFailed() {
+		Field field = new Field(ROWS, COLUMNS, MINES);
+
+		for (int row = 0; row < field.getRowCount(); row++) {
+			for (int column = 0; column < field.getColumnCount(); column++) {
+				if(field.getTile(row, column) instanceof Mine) {
+					field.openTile(row, column);
+					assertEquals(GameState.FAILED, field.getState());
+				}
+				
+				}
+	}}
 
 }
