@@ -3,9 +3,11 @@ package minesweeper.consoleui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 import minesweeper.UserInterface;
 import minesweeper.core.Clue;
@@ -23,6 +25,9 @@ public class ConsoleUI implements UserInterface {
 
 	/** Input reader. */
 	private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+	
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	
 
 	/**
 	 * Reads line of text from the reader.
@@ -45,6 +50,8 @@ public class ConsoleUI implements UserInterface {
 	 */
 	@Override
 	public void newGameStarted(Field field) {
+		System.out.println("Welcome, " + System.getProperty("user.name") + "!");
+	
 		this.field = field;
 		do {
 			update();
@@ -68,6 +75,8 @@ public class ConsoleUI implements UserInterface {
 	 */
 	@Override
 	public void update() {
+		Date date = new Date();
+		System.out.println(dateFormat.format(date));
 		System.out.println("  0 1 2 3 4 5 6 7 8");
 		int charBorder = 65;
 		for (int row = 0; row < field.getRowCount(); row++) {
@@ -116,15 +125,13 @@ public class ConsoleUI implements UserInterface {
 
 	private void handleInput(String input) throws WrongFormatException {
 		String toUppperCase = input.toUpperCase();
-		
+
 		Pattern pattern = Pattern.compile("(O|M)([A-I])([0-8])");
 		Matcher matcher = pattern.matcher(toUppperCase);
-
-		if (matcher.matches()) {
-			if (toUppperCase.equals("X")) {
-				System.out.println("Koniec hry!");
-				System.exit(0);
-			}
+		if (toUppperCase.equals("X")) {
+			System.out.println("Koniec hry!");
+			System.exit(0);
+		}else if (matcher.matches()) {
 			if (Pattern.matches("O([A-I])([0-8])", toUppperCase)) {
 				int row = input.charAt(1);
 				int column = Character.getNumericValue(input.charAt(2));
